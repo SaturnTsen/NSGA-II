@@ -1,0 +1,27 @@
+{
+    "name": "C++ Development Container",
+    "build": {
+        "dockerfile": "../cpp/Dockerfile",
+        "context": ".."
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools"
+            ]
+        }
+    },
+    "mounts": [
+        "source=${localWorkspaceFolder}/cpp,target=/app/cpp,type=bind,consistency=cached",
+        "source=${localWorkspaceFolder}/data,target=/app/data,type=bind,consistency=cached"
+    ],
+    "containerEnv": {
+        "CMAKE_BUILD_TYPE": "Debug"
+    },
+    "postCreateCommand": "apt-get update && apt-get install -y gdb lldb",
+    "remoteUser": "root"
+}
