@@ -2,6 +2,10 @@
 
 This project implements the **Non-dominated Sorting Genetic Algorithm II (NSGA-II)** in C++ to solve multi-objective optimization problems, particularly the **LOTZ** and **mLOTZ** benchmarks. It also includes a **modified NSGA-II** version that dynamically updates the crowding distance. Performance analysis and data visualization are handled in Python.
 
+## **Course Information**
+
+This project is part of the coursework for **Yiming CHEN** and **Linh Vu Tu** at **Ecole Polytechnique**, 2A P2, **CSC_42021_EP - Conception et analyse d'algorithmes (2024-2025)**. For more details, visit the [course page](https://moodle.polytechnique.fr/course/view.php?id=19281).
+
 ## **Table of Contents**
 1. [Project Overview](#project-overview)
 2. [Features](#features)
@@ -12,8 +16,6 @@ This project implements the **Non-dominated Sorting Genetic Algorithm II (NSGA-I
 7. [Contributing](#contributing)
 8. [License](#license)
 
----
-
 ## **Project Overview**
 
 - **Algorithm**: NSGA-II (with an optional modification to dynamically update the crowding distance).
@@ -21,8 +23,6 @@ This project implements the **Non-dominated Sorting Genetic Algorithm II (NSGA-I
   - **LOTZ (LeadingOnesTrailingZeros)**, a simple bi-objective function.
   - **mLOTZ**, an extension of LOTZ to \(m\) objectives.
 - **Objective**: Evaluate how efficiently NSGA-II (and its modified version) can **cover the Pareto front** of these benchmark functions.
-
----
 
 ## **Features**
 
@@ -32,7 +32,6 @@ This project implements the **Non-dominated Sorting Genetic Algorithm II (NSGA-I
 - **Performance Analysis**: Gathers data on how many iterations it takes to cover the Pareto front, success rates, etc.
 - **Python Scripts**: Analyze CSV outputs and generate plots for publication-quality results.
 
----
 
 ## **Directory Structure**
 
@@ -55,67 +54,52 @@ my-multiobjective-project/
 
 For a more detailed overview, see [Project Structure](#project-structure) below.
 
----
-
 ## **Building the C++ Code**
 
 1. **Install a C++ compiler** (e.g., `g++` or `clang++`).
 2. **Clone the repository** and navigate to the `cpp` directory:
    ```bash
-   cd my-multiobjective-project/cpp
+   git clone https://github.com/SaturnTsen/NSGA-II
+   cd NSGA-II
    ```
-3. **Build** using Make or CMake:
-   - **Using Make**:
-     ```bash
-     make
-     ```
-     This will generate an executable (e.g., `nsga2_experiment`).
+3. **Build** using CMake:
    - **Using CMake**:
      ```bash
      mkdir build && cd build
-     cmake ..
+     cmake ../cpp
      make
      ```
-     This will generate a binary inside the `build` directory (e.g., `nsga2_experiment`).
-
-4. **Run Tests** (optional):
-   ```bash
-   # Make-based:
-   make test
-   
-   # Or CMake-based (from build/ folder):
-   ctest
-   ```
-
----
+     This will generate a binary `nsgaii` (or `nsgaii.exe` in Windows) as well
+     as its library in the path `build/`
 
 ## **Running Experiments**
 
-After building, you will have an executable (e.g., `nsga2_experiment`). Run it with arguments for problem size, number of objectives, etc. For example:
+After building, you will have the executable. Run it with arguments for problem
+size, number of objectives, etc. For example:
 
 ```bash
-./nsga2_experiment --problem LOTZ --n 10 --population-size 40 --iterations 10000
+./nsga2_experiment --problem LOTZ --n 10 --population-size 40 --iterations 10000 --save-dir ../data/
 ```
 
 This program will:
 
 1. Initialize a population of binary strings.
 2. Run NSGA-II (or modified NSGA-II) for the specified number of iterations.
-3. Save experimental results (e.g., Pareto coverage, iteration count, etc.) as **CSV files** in the `data/` directory.
+3. Save experimental results (e.g., Pareto coverage, iteration count, etc.) as
+   **CSV files** in the `data/` directory.
 
-**Tip**: Use different seeds or multiple runs to gather statistically meaningful data.
-
----
+**Tip**: Use different seeds or multiple runs to gather statistically meaningful
+data.
 
 ## **Analyzing and Visualizing Results (Python)**
 
-1. **Install Python 3** (if you don’t have it already).
+1. **Install Python 3**.
+
 2. **Install dependencies**:
    ```bash
-   cd my-multiobjective-project/python
+   cd python
    pip install -r requirements.txt
    ```
-   Typically includes `pandas`, `matplotlib`, `numpy`, etc.
 
 3. **Data Analysis**:
    ```bash
@@ -135,9 +119,7 @@ This program will:
 
 All figures will be saved in the **`plots/`** folder.
 
----
-
-## **Project Structure**
+## **Detailed Project Structure**
 
 ```
 my-multiobjective-project/
@@ -181,39 +163,7 @@ my-multiobjective-project/
 └── README.md                   # Top-level README
 ```
 
-### Details
-
-1. **cpp/**:
-   - Contains **all core C++ code** for NSGA-II (standard and modified versions), the benchmark functions (LOTZ, mLOTZ), and any utilities.
-   - `main.cpp` runs the experiments, saves raw results (e.g., CSV) to `../data/`.
-   - `tests/` holds unit tests to ensure correctness of each module.
-
-2. **python/**:
-   - Contains scripts for **data analysis and visualization**.
-   - `analyze_results.py` reads the CSV files generated by the C++ program, computes statistics (e.g., coverage of the Pareto front, success rates).
-   - `plot_results.py` generates plots (e.g., performance curves, coverage over time) using libraries such as **matplotlib** or **seaborn**.
-   - `requirements.txt` lists Python dependencies.
-
-3. **data/**:
-   - Stores the **experiment results** (CSV files) from the C++ code.
-   - Also can store any processed results or intermediate data.
-
-4. **plots/**:
-   - Stores **generated figures** (e.g., PNG, PDF) from Python scripts.
-
-5. **docs/**:
-   - Contains the **final report** (`report.pdf`) and any supplementary documentation.
-
-6. **README.md** (top-level):
-   - Provides a **guide for building, running, and analyzing** the project.
-
-
----
-
 ## **License**
 
-This project is licensed under the [MIT License](./LICENSE). Feel free to use, modify, and distribute.
-
----
-
-**Thank you for using and contributing to our Multi-Objective Optimization project!** If you have any questions or suggestions, please open an issue or reach out to the maintainers.
+This project is licensed under the [MIT License](./LICENSE). Feel free to use,
+modify, and distribute.

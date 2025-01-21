@@ -1,5 +1,28 @@
-.vscode
+.vscode/settings.json
+
+# C++
 cpp/build/
 build/
 out/
 bin/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.brf
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.gz
