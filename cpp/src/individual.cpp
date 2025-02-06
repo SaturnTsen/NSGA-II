@@ -1,10 +1,7 @@
-#include <cassert>
-#include <algorithm>
-#include <stdexcept>
-#include <ranges>
-#include <iostream>
-#include <format>
 #include "individual.h"
+#include <cassert>
+#include <iostream>
+#include <stdexcept>
 
 namespace individual {
     individual_t operator&(const individual_t &a, const individual_t &b) {
@@ -51,7 +48,7 @@ namespace individual {
         return result;
     }
 
-    std::ostream& operator<<(std::ostream &os, const individual_t& x) {
+    std::ostream &operator<<(std::ostream &os, const individual_t &x) {
         for (bool b : x) {
             os << (b ? '1' : '0');
         }
@@ -76,10 +73,10 @@ namespace individual {
         return bits;
     }
 
-    using pareto::order;
-    using objective::val_t;
     using objective::fn_t;
-    
+    using objective::val_t;
+    using pareto::order;
+
     order compare(individual_t &a, individual_t &b, fn_t f) {
         val_t fa = f(a);
         val_t fb = f(b);
@@ -91,16 +88,16 @@ namespace individual {
         val_t fb = f(b);
         return pareto::strictly_dominates(fa, fb);
     }
-    
+
     bool dominates(individual_t &a, individual_t &b, fn_t f) {
         val_t fa = f(a);
         val_t fb = f(b);
         return pareto::dominates(fa, fb);
     }
-};
+}; // namespace individual
 
 namespace objective {
-        std::ostream& operator<<(std::ostream &os, const val_t &v) {
+    std::ostream &operator<<(std::ostream &os, const val_t &v) {
         size_t n = v.size();
         os << '[';
         if (n > 0) {
@@ -112,7 +109,7 @@ namespace objective {
         os << ']';
         return os;
     }
-}
+} // namespace objective
 
 namespace pareto {
     order compare(val_t &a, val_t &b) {
@@ -135,13 +132,9 @@ namespace pareto {
         return out;
     }
 
-    bool strictly_dominates(val_t &a, val_t &b) {
-        return compare(a, b) > 0;
-    }
+    bool strictly_dominates(val_t &a, val_t &b) { return compare(a, b) > 0; }
 
     /* Returns `true` if the left objective value Pareto-dominates
         the right value. */
-    bool dominates(val_t &a, val_t &b) {
-        return compare(a, b) >= 0;
-    }
-};
+    bool dominates(val_t &a, val_t &b) { return compare(a, b) >= 0; }
+}; // namespace pareto

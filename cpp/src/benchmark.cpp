@@ -1,7 +1,7 @@
-#include <stdexcept>
+#include "benchmark.h"
 #include <cassert>
 #include <span>
-#include "benchmark.h"
+#include <stdexcept>
 
 namespace benchmark {
     using individual::individual_t;
@@ -29,7 +29,6 @@ namespace benchmark {
         return objective::val_t{(float)lotzk(0, x), (float)lotzk(1, x)};
     }
 
-
     int mlotzk(int m, int k, individual::span x) {
         int n2 = 2 * x.size() / m;
         return lotzk(k % 2, x.subspan((k / 2) * n2, n2));
@@ -46,4 +45,4 @@ namespace benchmark {
         }
         return v;
     }
-}
+} // namespace benchmark

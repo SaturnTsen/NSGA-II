@@ -1,17 +1,14 @@
-#include <span>
-#include <cassert>
 #include "benchmark.h"
+#include <cassert>
+#include <span>
 
 using namespace individual;
 using namespace benchmark;
 using namespace objective;
 
 int main() {
-    individual_t x {
-        1, 1, 1,
-        1, 1, 0,
-        0, 0, 1,
-        1, 0, 0,
+    individual_t x{
+        1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0,
     };
 
     val_t v = mlotz(8, x);

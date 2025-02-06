@@ -3,6 +3,4 @@
 
 #define NSGAII_MODIFIED_NSGA2_H
 
-
-
 #endif
