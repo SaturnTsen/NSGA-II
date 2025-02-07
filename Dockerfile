@@ -16,17 +16,18 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://apt.llvm.org/llvm.sh | bash -s -- 19
-
-RUN apt-get update && apt-get install -y \
-    clang-19 \
-    clang++-19 \
-    clangd-19 \
-    lldb-19 \
-    libc++-19-dev \
-    libc++abi-19-dev \
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
+    add-apt-repository "deb http://apt.llvm.org/$(lsb_release -sc)/ llvm-toolchain-$(lsb_release -sc)-19 main" && \
+    apt-get update && apt-get install -y \
+        clang-19 \
+        clang++-19 \
+        clangd-19 \
+        lldb-19 \
+        libc++-19-dev \
+        libc++abi-19-dev \
+        python3-lldb-19 \
     && rm -rf /var/lib/apt/lists/*
-
+     
 RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 100 \
     && update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-19 100 \

@@ -30,6 +30,7 @@ namespace benchmark {
     }
 
     int mlotzk(int m, int k, individual::span x) {
+        assert(k >= 0 && k < m);
         int n2 = 2 * x.size() / m;
         return lotzk(k % 2, x.subspan((k / 2) * n2, n2));
     }

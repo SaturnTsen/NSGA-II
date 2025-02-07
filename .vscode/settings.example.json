@@ -1,0 +1,19 @@
+{
+    "debug.disassemblyView.showSourceCode": false,
+    "cmake.options.statusBarVisibility": "visible",
+    "cmake.sourceDirectory": "/workspaces/NSGA-II/cpp",
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
+    "cmake.debugConfig": {
+        "MIMode": "lldb",
+        "miDebuggerPath": "/usr/bin/lldb"
+    },
+    "clangd.path": "/usr/bin/clangd",
+    "clangd.arguments": [],
+    "editor.formatOnSave": true,
+    "cmake.ignoreCMakeListsMissing": true,
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "C_Cpp.autocomplete": "disabled"
+}

@@ -1,8 +1,6 @@
 #include "individual.h"
 #include "utils.h"
 #include <cassert>
-#include <format>
-#include <iomanip>
 #include <iostream>
 
 using individual::individual_t;

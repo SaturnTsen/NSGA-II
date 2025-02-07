@@ -8,7 +8,6 @@ static int TEST_CONSTANT = 1;
 
 namespace benchmark {
     using individual::individual_t;
-
     int lotzk(int k, individual::span x);
 
     /**
@@ -19,6 +18,7 @@ namespace benchmark {
      * and the second objective value counts the number of trailing zeros
      * in the binary representation of the individual.
      */
+    // fn_t lotz = [](individual_t &x) -> objective::val_t;
     objective::val_t lotz(individual_t &x);
 
     /**

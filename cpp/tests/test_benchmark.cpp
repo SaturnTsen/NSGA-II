@@ -1,6 +1,5 @@
 #include "benchmark.h"
 #include <cassert>
-#include <span>
 
 using namespace individual;
 using namespace benchmark;
