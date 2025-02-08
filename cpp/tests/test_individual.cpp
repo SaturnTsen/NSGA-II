@@ -9,7 +9,7 @@ using objective::val_t;
 val_t f(individual_t &x) {
     val_t v;
     for (bool b : x) {
-        v.push_back((float)b);
+        v.push_back((double)b);
     }
     return v;
 }

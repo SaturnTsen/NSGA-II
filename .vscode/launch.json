@@ -7,35 +7,42 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "(lldb) Launch",
+            "name": "main",
             "program": "${workspaceFolder}/build/nsgaii",
             "args": [],
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/nsgaii",
+            "name": "test_benchmark",
+            "program": "${workspaceFolder}/build/tests/test_benchmark",
             "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "preLaunchTask": "Build with Make",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ]
-        }
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "test_individual",
+            "program": "${workspaceFolder}/build/tests/test_individual",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "test_nsga2",
+            "program": "${workspaceFolder}/build/tests/test_nsga2",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "test_graph",
+            "program": "${workspaceFolder}/build/tests/test_graph",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ]
 }

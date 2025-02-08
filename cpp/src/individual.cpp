@@ -118,8 +118,8 @@ namespace pareto {
 
         order out = order::equivalent;
         for (size_t i = 0; i < n; ++i) {
-            float ai = a[i];
-            float bi = b[i];
+            double ai = a[i];
+            double bi = b[i];
             if (ai == bi) {
                 continue;
             }

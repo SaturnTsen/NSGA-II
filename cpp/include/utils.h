@@ -1,9 +1,8 @@
+#pragma once
+
 #include <format>
+#include <unordered_map>
 #include <vector>
-
-#ifndef NSGAII_UTILS
-
-#define NSGAII_UTILS
 
 template <typename T>
 struct std::formatter<std::vector<T>> {
@@ -69,5 +68,3 @@ struct std::formatter<std::vector<bool>> {
         return out;
     }
 };
-
-#endif

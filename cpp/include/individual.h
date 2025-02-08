@@ -1,11 +1,10 @@
+#pragma once
+
 #include <compare>
+#include <functional>
 #include <iostream>
 #include <span>
 #include <vector>
-
-#ifndef NSGAII_INDIVIDUAL_H
-
-#define NSGAII_INDIVIDUAL_H
 
 /* Individual values. */
 namespace individual {
@@ -32,10 +31,10 @@ namespace individual {
      *
      * An individual is a bit string, i.e a vector of booleans.
      */
-    using individual_t = std::vector<char>;
+    using individual_t = std::vector<uint8_t>;
 
     /* An `individual_t` span. */
-    using span = std::span<char>;
+    using span = std::span<uint8_t>;
 
     /* Converts an individual to an integer in big-endian format. */
     size_t to_bits_be(individual_t &x);
@@ -59,7 +58,7 @@ namespace objective {
     using individual::individual_t;
 
     /* An multi-objective value is a floating-point vector. */
-    using val_t = std::vector<float>;
+    using val_t = std::vector<double>;
 
     /**
      * @brief An objective function that returns an objective value
@@ -77,7 +76,7 @@ namespace objective {
      * objective::val_t (*f)(individual_t&) = +[](individual_t x) { ... };
      * ```
      */
-    using fn_t = val_t (&)(individual_t &);
+    using fn_t = std::function<val_t(individual_t &)>;
 
     std::ostream &operator<<(std::ostream &os, const val_t &v);
 } // namespace objective
@@ -113,5 +112,3 @@ namespace individual {
        the right individual with respect to an objective function. */
     bool dominates(individual_t &a, individual_t &b, objective::fn_t f);
 } // namespace individual
-
-#endif

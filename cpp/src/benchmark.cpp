@@ -1,6 +1,7 @@
 #include "benchmark.h"
+#include "individual.h"
 #include <cassert>
-#include <span>
+#include <cstddef>
 #include <stdexcept>
 
 namespace benchmark {
@@ -26,7 +27,7 @@ namespace benchmark {
     }
 
     objective::val_t lotz(individual_t &x) {
-        return objective::val_t{(float)lotzk(0, x), (float)lotzk(1, x)};
+        return objective::val_t{(double)lotzk(0, x), (double)lotzk(1, x)};
     }
 
     int mlotzk(int m, int k, individual::span x) {
@@ -45,5 +46,29 @@ namespace benchmark {
             v[k] = mlotzk(m, k, x);
         }
         return v;
+    }
+
+    // mLOTZ functor
+    mlotz_functor::mlotz_functor(size_t m) : m(m) {}
+
+    objective::val_t mlotz_functor::operator()(individual_t &x) {
+        return mlotz(m, x);
+    }
+
+    bool is_lotz_pareto_front(individual_t &x) {
+        return lotzk(0, x) + lotzk(1, x) == x.size();
+    }
+
+    bool is_mlotz_pareto_front(int m, individual_t &x) {
+        int n = x.size();
+        assert(m % 2 == 0);
+        assert(n % (m / 2) == 0);
+        int len_span = n / (m / 2);
+        for (int k = 0; k < m; k += 2) {
+            if (mlotzk(m, k, x) + mlotzk(m, k + 1, x) != len_span) {
+                return false;
+            }
+        }
+        return true;
     }
 } // namespace benchmark

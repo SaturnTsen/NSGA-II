@@ -21,7 +21,8 @@
                 "Gruntfuggly.todo-tree",
                 // Linting
                 "streetsidesoftware.code-spell-checker",
-                "streetsidesoftware.code-spell-checker-french"
+                "streetsidesoftware.code-spell-checker-french",
+                "cschlosser.doxdocgen"
             ]
         }
     },

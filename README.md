@@ -6,6 +6,16 @@ This project implements the **Non-dominated Sorting Genetic Algorithm II (NSGA-I
 
 This project is part of the coursework for **Yiming CHEN** and **Linh Vu Tu** at **Ecole Polytechnique**, 2A P2, **CSC_42021_EP - Conception et analyse d'algorithmes (2024-2025)**. For more details, visit the [course page](https://moodle.polytechnique.fr/course/view.php?id=19281).
 
+## **A one-click ready-to-use environment**
+
+Open this project with VS Code and reopen it using Dev Container Extension. The
+container as well as the entire toolchain (debug tools, compilers, linters,
+etc.) will be built automatically and you can start coding and running the
+project right away.
+
+Note: The container is not equipped with python, so you need to run
+`analyze_results.py` and `plot_results.py` on your local machine.
+
 ## **Table of Contents**
 1. [Project Overview](#project-overview)
 2. [Features](#features)
@@ -36,7 +46,7 @@ This project is part of the coursework for **Yiming CHEN** and **Linh Vu Tu** at
 ## **Directory Structure**
 
 ```
-my-multiobjective-project/
+NSGA-II/
 ├── cpp/
 │   ├── include/
 │   ├── src/
@@ -122,7 +132,7 @@ All figures will be saved in the **`plots/`** folder.
 ## **Detailed Project Structure**
 
 ```
-my-multiobjective-project/
+NSGA-II/
 ├── cpp/
 │   ├── include/
 │   │   ├── benchmark.h         # Header for LOTZ/mLOTZ functions
