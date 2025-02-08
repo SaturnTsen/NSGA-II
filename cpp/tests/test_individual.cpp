@@ -54,6 +54,10 @@ int main() {
 
     assert(individual::compare(x, z, *f) == pareto::order::unordered);
 
+    using individual::operator<<;
+
+    std::cout << x << y << z << std::endl;
+
     std::cout << "Success" << std::endl;
 
     return 0;

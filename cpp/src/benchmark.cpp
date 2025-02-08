@@ -60,6 +60,7 @@ namespace benchmark {
     }
 
     bool is_mlotz_pareto_front(int m, individual_t &x) {
+        // TODO prove this in the report
         int n = x.size();
         assert(m % 2 == 0);
         assert(n % (m / 2) == 0);

@@ -1,10 +1,11 @@
 #pragma once
 
 #include <cassert>
+#include <cstddef>
+#include <queue>
 #include <stdexcept>
 #include <unordered_map>
 #include <unordered_set>
-
 /**
  * @brief A simple graph implementation using adjacency list
  *
@@ -13,8 +14,12 @@
 template <typename T>
 class Graph {
     std::unordered_map<T, std::unordered_set<T>> adj_list;
-    std::unordered_map<T, std::unordered_set<T>> adj_list_rev;
     std::unordered_map<T, int> in_degree;
+
+    using rank_t = size_t;
+    using front_t = std::vector<T>;
+    using fronts_t = std::vector<front_t>;
+    bool destructed = false;
 
   public:
     /**
@@ -23,9 +28,11 @@ class Graph {
      * @param node
      */
     void addNode(const T &node) {
+        if (destructed) {
+            throw std::runtime_error("Graph has been destructed");
+        }
         if (adj_list.find(node) == adj_list.end()) {
             adj_list[node] = std::unordered_set<T>();
-            adj_list_rev[node] = std::unordered_set<T>();
             in_degree[node] = 0;
         }
     }
@@ -37,37 +44,59 @@ class Graph {
      * @param to
      */
     void addEdge(const T &from, const T &to) {
+        if (destructed) {
+            throw std::runtime_error("Graph has been destructed");
+        }
         assert(adj_list.find(from) != adj_list.end());
         assert(adj_list.find(to) != adj_list.end());
 
-        if (adj_list[from].insert(to).second &&
-            adj_list_rev[to].insert(from).second) {
+        if (adj_list[from].insert(to).second) {
             in_degree[to]++;
         }
     }
 
-    /**
-     * @brief Remove a node from the graph
-     *
-     * @param node
-     */
-    void removeNode(const T &node) {
-        if (adj_list.find(node) == adj_list.end()) {
-            throw std::runtime_error("Node does not exist");
+    fronts_t popAndGetFronts() {
+        if (destructed) {
+            throw std::runtime_error("Graph has been destructed");
+        }
+        fronts_t fronts;
+
+        std::queue<T> q;
+        std::unordered_set<T> visited;
+        // Initialization
+        for (const auto &[node, degree] : in_degree) {
+            if (degree == 0) {
+                q.push(node);
+                visited.insert(node);
+            }
         }
 
-        for (auto &neighbor : adj_list[node]) {
-            adj_list_rev[neighbor].erase(node);
-            in_degree[neighbor]--;
-        }
+        // Core algorithm
+        while (!q.empty()) {
+            fronts.push_back(front_t());
+            auto &last_front = fronts.back();
+            while (!q.empty() && in_degree[q.front()] == 0) {
+                T node = q.front();
+                q.pop();
+                last_front.push_back(node);
+            }
 
-        for (auto &neighbor : adj_list_rev[node]) {
-            adj_list[neighbor].erase(node);
+            for (const auto &node : last_front) {
+                // We fall into the following loop N times
+                for (const auto &neighbor : adj_list[node]) {
+                    // The loop will repeat at most N times
+                    in_degree[neighbor]--;
+                    if (in_degree[neighbor] == 0 &&
+                        visited.find(neighbor) == visited.end()) {
+                        q.push(neighbor);
+                        visited.insert(node);
+                    }
+                }
+            }
         }
-
-        adj_list.erase(node);
-        adj_list_rev.erase(node);
-        in_degree.erase(node);
+        // Thus, the time complexity is O(N^2)
+        destructed = true;
+        return fronts;
     }
 
     /**
@@ -77,11 +106,19 @@ class Graph {
      * @return int
      */
     int getInDegree(const T &node) {
+        if (destructed) {
+            throw std::runtime_error("Graph has been destructed");
+        }
         if (in_degree.find(node) == in_degree.end()) {
             throw std::runtime_error("Node does not exist");
         }
         return in_degree[node];
     }
 
-    size_t size() const { return adj_list.size(); }
+    size_t size() const {
+        if (destructed) {
+            throw std::runtime_error("Graph has been destructed");
+        }
+        return adj_list.size();
+    }
 };

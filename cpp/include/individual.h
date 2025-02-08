@@ -33,6 +33,8 @@ namespace individual {
      */
     using individual_t = std::vector<uint8_t>;
 
+    using population_t = std::vector<individual_t>;
+
     /* An `individual_t` span. */
     using span = std::span<uint8_t>;
 

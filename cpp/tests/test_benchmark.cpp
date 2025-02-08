@@ -46,6 +46,9 @@ void test_pareto_front() {
     assert(is_mlotz_pareto_front(6, p));
     assert(!is_mlotz_pareto_front(4, p));
 
+    //    000100
+    individual_t q{0, 0, 0, 1, 0, 0};
+    assert(is_mlotz_pareto_front(4, q));
     return;
 }
 
