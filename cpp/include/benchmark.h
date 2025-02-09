@@ -5,7 +5,7 @@
 
 namespace benchmark {
     using individual::individual_t;
-    int lotzk(int k, individual::span x);
+    int lotzk(const int k, const individual::span &x);
 
     /**
      * @brief The LeadingOnesTrailingZeros (LOTZ) function, a simple
@@ -16,7 +16,7 @@ namespace benchmark {
      * in the binary representation of the individual.
      */
     // fn_t lotz = [](individual_t &x) -> objective::val_t;
-    objective::val_t lotz(individual_t &x);
+    objective::val_t lotz(const individual::span &x);
 
     /**
      * @brief A single objective of the mLOTZ multi-objective function.
@@ -24,23 +24,23 @@ namespace benchmark {
      * This returns the `k`-th coordinate of the mLOTZ value,
      * where `0 <= k < m`.
      */
-    int mlotzk(int m, int k, individual::span x);
+    int mlotzk(const int m, const int k, const individual::span &x);
 
     /**
      * @brief The mLOTZ multi-objective function.
      *
      * This is a generalized version of the bi-objective LOTZ.
      */
-    objective::val_t mlotz(int m, individual_t &x);
+    objective::val_t mlotz(const int m, const individual_t &x);
 
     /**
      * @brief The mLOTZ functor
      *
      */
     struct mlotz_functor {
-        size_t m;
-        mlotz_functor(size_t m);
-        objective::val_t operator()(individual_t &x);
+        const size_t m;
+        mlotz_functor(const size_t m);
+        objective::val_t operator()(const individual_t &x);
     };
 
     /**
@@ -50,7 +50,7 @@ namespace benchmark {
      * This function checks if the number of leading ones and trailing zeros
      * sum to the length of the individual.
      */
-    bool is_lotz_pareto_front(individual_t &x);
+    bool is_lotz_pareto_front(const individual_t &x);
 
     /**
      * @brief Check if an individual is on the Pareto front of the mLOTZ
@@ -59,6 +59,6 @@ namespace benchmark {
      * This function checks if each slice of the individual is on the LOTZ
      * Pareto front.
      */
-    bool is_mlotz_pareto_front(int m, individual_t &x);
+    bool is_mlotz_pareto_front(const int m, const individual_t &x);
 
 } // namespace benchmark

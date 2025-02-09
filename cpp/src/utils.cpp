@@ -1,61 +1,60 @@
 #include "utils.h"
 #include "benchmark.h"
+#include "individual.h"
+#include <cstddef>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <sstream>
 using json = nlohmann::json;
 
+std::string get_current_time() {
+    std::time_t now = std::time(nullptr);
+    std::tm *ltm = std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(ltm, "%Y-%m-%d %H:%M:%S");
+    return oss.str();
+}
+
 namespace end_criteria {
 
-    max_iterations::max_iterations(size_t max_iterations)
-        : max_iters(max_iterations) {}
+    max_iterations::max_iterations(size_t max_iterations) : max_iters(max_iterations) {}
 
-    bool max_iterations::operator()(population_t &population,
-                                    const size_t iteration) {
+    bool max_iterations::operator()(const population_t &population, const size_t iteration) {
         return iteration >= max_iters;
     }
 
-    hit_mlotz_pareto_front::hit_mlotz_pareto_front(size_t m) : m(m) {}
+    cover_mlotz_pareto_front::cover_mlotz_pareto_front(size_t m) : m(m) {}
 
-    bool hit_mlotz_pareto_front::operator()(population_t &population,
-                                            const size_t iteration) {
-
-        using individual::operator<<;
+    size_t count_pareto_front(const population_t &p, size_t m) {
         size_t count_pareto_front = 0;
-
-        for (individual_t &individual : population) {
+        for (const auto &individual : p)
             if (benchmark::is_mlotz_pareto_front(m, individual))
                 count_pareto_front++;
-        }
+        return count_pareto_front;
+    }
 
-        if (iteration % 20 == 0)
-            std::cout << std::format(
-                             "iteration: {}, individuals on Pareto front: {}",
-                             iteration, count_pareto_front)
+    bool cover_mlotz_pareto_front::operator()(const population_t &p, const size_t iter) {
+        using individual::operator<<;
+        size_t cnt = count_pareto_front(p, m);
+        if (iter % 20 == 0)
+            std::cout << std::format("Iteration: {}, individuals on Pareto front: {}", iter, cnt)
                       << std::endl;
-
-        if (count_pareto_front == population.size()) {
-            for (individual_t &individual : population) {
-                std::cout << "individual: " << individual << std::endl;
+        if (cnt == p.size()) {
+            for (auto &i : p) {
+                std::cout << "individual: " << i << std::endl;
             }
             return true;
         }
-
         return false;
     }
 
     // Task6Logger(size_t id, size_t p, size_t m, size_t max_iters,
     // size_t print_period, std::string filename);
-    Task6Logger::Task6Logger(size_t id, size_t p, size_t m, size_t max_iters,
-                             std::string filename, size_t print_period)
-        : id(id), p(p), m(m), max_iters(max_iters), print_period(print_period),
-          filename(filename) {
-        std::time_t now = std::time(nullptr);
-        std::tm *ltm = std::localtime(&now);
-        std::ostringstream oss;
-        oss << std::put_time(ltm, "%Y-%m-%d %H:%M:%S");
-        str = oss.str();
-        log_data["metadata"]["begin_time"] = str.erase(str.size() - 1);
+    Task6Logger::Task6Logger(const size_t id, const size_t p, const size_t m,
+                             const size_t max_iters, const std::string filename,
+                             const size_t print_period)
+        : id(id), p(p), m(m), max_iters(max_iters), print_period(print_period), filename(filename) {
+        log_data["metadata"]["begin_time"] = get_current_time();
         log_data["metadata"]["individual_size"] = id;
         log_data["metadata"]["population_size"] = p;
         log_data["metadata"]["objective_size"] = m;
@@ -74,52 +73,38 @@ namespace end_criteria {
         }
     }
 
-    void Task6Logger::log_new_data(size_t optimum_count,
-                                   const size_t current_iter) {
+    void Task6Logger::log_new_data(size_t optimum_count, const size_t current_iter) {
         log_data["count_pareto_front"].push_back(optimum_count);
         if (current_iter % print_period == 0) {
-            std::cout << std::format(
-                             "iteration: {}, individuals on Pareto front: {}",
-                             current_iter, optimum_count)
+            std::cout << std::format("Iteration: {}, individuals on Pareto front: {}", current_iter,
+                                     optimum_count)
                       << std::endl;
             sync_to_file();
         }
     }
+
     void Task6Logger::add_final_results(const population_t &population) {
         using individual::operator<<;
         for (const individual_t &individual : population) {
-            std::ostringstream oss;
-            oss << individual << std::endl;
-            std::string result = oss.str();
-            if (!result.empty() && result[result.size() - 1] == '\n') {
+            auto result = individual::to_string(individual);
+            if (!result.empty() && result[result.size() - 1] == '\n')
                 result.erase(result.size() - 1);
-            }
             log_data["final_population"].push_back(result);
         }
-        std::time_t now = std::time(nullptr);
-        std::tm *ltm = std::localtime(&now);
-        std::ostringstream oss;
-        oss << std::put_time(ltm, "%Y-%m-%d %H:%M:%S");
-        str = oss.str();
-        log_data["metadata"]["end_time"] = str.erase(str.size() - 1);
+        log_data["metadata"]["end_time"] = get_current_time();
         std::cout << "Saving log to " << filename << std::endl;
     }
-    bool Task6Logger::operator()(population_t &population,
-                                 const size_t current_iter) {
+
+    bool Task6Logger::operator()(const population_t &population, const size_t current_iter) {
 
         // Count the number of individuals in the Pareto set
-        size_t optimum_count = 0;
-        for (individual_t &individual : population)
-            if (benchmark::is_mlotz_pareto_front(m, individual))
-                optimum_count++;
-
-        log_new_data(optimum_count, current_iter);
-        if (current_iter >= max_iters || optimum_count == population.size()) {
+        size_t cnt = count_pareto_front(population, m);
+        log_new_data(cnt, current_iter);
+        if (current_iter >= max_iters || cnt >= population.size()) {
             if (current_iter >= max_iters)
                 std::cout << "Maximum iterations reached..." << std::endl;
             else
-                std::cout << "All individuals are on the Pareto front!"
-                          << std::endl;
+                std::cout << "All individuals are on the Pareto front!" << std::endl;
 
             // save final results
             add_final_results(population);

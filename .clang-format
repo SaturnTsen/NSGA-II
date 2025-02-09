@@ -3,4 +3,5 @@ IndentWidth: 4
 UseTab: Never
 NamespaceIndentation: All
 AlwaysBreakTemplateDeclarations: Yes
+ColumnLimit: 100
 

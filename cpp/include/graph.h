@@ -14,7 +14,7 @@
 template <typename T>
 class Graph {
     std::unordered_map<T, std::unordered_set<T>> adj_list;
-    std::unordered_map<T, int> in_degree;
+    std::unordered_map<T, size_t> in_degree;
 
     using rank_t = size_t;
     using front_t = std::vector<T>;
@@ -28,9 +28,8 @@ class Graph {
      * @param node
      */
     void addNode(const T &node) {
-        if (destructed) {
+        if (destructed)
             throw std::runtime_error("Graph has been destructed");
-        }
         if (adj_list.find(node) == adj_list.end()) {
             adj_list[node] = std::unordered_set<T>();
             in_degree[node] = 0;
@@ -44,9 +43,8 @@ class Graph {
      * @param to
      */
     void addEdge(const T &from, const T &to) {
-        if (destructed) {
+        if (destructed)
             throw std::runtime_error("Graph has been destructed");
-        }
         assert(adj_list.find(from) != adj_list.end());
         assert(adj_list.find(to) != adj_list.end());
 
@@ -56,9 +54,8 @@ class Graph {
     }
 
     fronts_t popAndGetFronts() {
-        if (destructed) {
+        if (destructed)
             throw std::runtime_error("Graph has been destructed");
-        }
         fronts_t fronts;
 
         std::queue<T> q;
@@ -86,8 +83,7 @@ class Graph {
                 for (const auto &neighbor : adj_list[node]) {
                     // The loop will repeat at most N times
                     in_degree[neighbor]--;
-                    if (in_degree[neighbor] == 0 &&
-                        visited.find(neighbor) == visited.end()) {
+                    if (in_degree[neighbor] == 0 && visited.find(neighbor) == visited.end()) {
                         q.push(neighbor);
                         visited.insert(node);
                     }
@@ -105,20 +101,17 @@ class Graph {
      * @param node
      * @return int
      */
-    int getInDegree(const T &node) {
-        if (destructed) {
+    size_t getInDegree(const T &node) const {
+        if (destructed)
             throw std::runtime_error("Graph has been destructed");
-        }
-        if (in_degree.find(node) == in_degree.end()) {
+        if (in_degree.find(node) == in_degree.end())
             throw std::runtime_error("Node does not exist");
-        }
-        return in_degree[node];
+        return in_degree.at(node);
     }
 
     size_t size() const {
-        if (destructed) {
+        if (destructed)
             throw std::runtime_error("Graph has been destructed");
-        }
         return adj_list.size();
     }
 };

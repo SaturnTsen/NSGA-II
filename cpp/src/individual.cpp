@@ -49,13 +49,23 @@ namespace individual {
     }
 
     std::ostream &operator<<(std::ostream &os, const individual_t &x) {
-        for (bool b : x) {
+        for (auto b : x) {
             os << (b ? '1' : '0');
         }
         return os;
     }
 
-    size_t to_bits_be(individual_t &x) {
+    std::string to_string(const individual_t &x) {
+        size_t n = x.size();
+        std::string result(n, '0');
+        for (size_t i = 0; i < n; ++i) {
+            result[i] = (x[i] == 0) ? '0' : '1';
+        }
+        return result;
+    }
+
+    size_t to_bits_be(const individual_t &x) {
+        assert(x.size() <= (sizeof(size_t) << 3));
         size_t bits = 0;
         int n = x.size();
         for (int k = 0; k < n; ++k) {
@@ -64,7 +74,8 @@ namespace individual {
         return bits;
     }
 
-    size_t to_bits_le(individual_t &x) {
+    size_t to_bits_le(const individual_t &x) {
+        assert(x.size() <= (sizeof(size_t) << 3));
         size_t bits = 0;
         int n = x.size();
         for (int k = 0; k < n; ++k) {
@@ -77,19 +88,19 @@ namespace individual {
     using objective::val_t;
     using pareto::order;
 
-    order compare(individual_t &a, individual_t &b, fn_t f) {
+    order compare(const individual_t &a, const individual_t &b, const fn_t &f) {
         val_t fa = f(a);
         val_t fb = f(b);
         return pareto::compare(fa, fb);
     }
 
-    bool strictly_dominates(individual_t &a, individual_t &b, fn_t f) {
+    bool strictly_dominates(const individual_t &a, const individual_t &b, const fn_t &f) {
         val_t fa = f(a);
         val_t fb = f(b);
         return pareto::strictly_dominates(fa, fb);
     }
 
-    bool dominates(individual_t &a, individual_t &b, fn_t f) {
+    bool dominates(const individual_t &a, const individual_t &b, const fn_t &f) {
         val_t fa = f(a);
         val_t fb = f(b);
         return pareto::dominates(fa, fb);
@@ -112,7 +123,7 @@ namespace objective {
 } // namespace objective
 
 namespace pareto {
-    order compare(val_t &a, val_t &b) {
+    order compare(const val_t &a, const val_t &b) {
         size_t n = a.size();
         assert(n == b.size());
 
@@ -132,9 +143,9 @@ namespace pareto {
         return out;
     }
 
-    bool strictly_dominates(val_t &a, val_t &b) { return compare(a, b) > 0; }
+    bool strictly_dominates(const val_t &a, const val_t &b) { return compare(a, b) > 0; }
 
     /* Returns `true` if the left objective value Pareto-dominates
         the right value. */
-    bool dominates(val_t &a, val_t &b) { return compare(a, b) >= 0; }
+    bool dominates(const val_t &a, const val_t &b) { return compare(a, b) >= 0; }
 }; // namespace pareto

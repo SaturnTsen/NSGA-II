@@ -26,12 +26,23 @@ RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
         libc++-19-dev \
         libc++abi-19-dev \
         python3-lldb-19 \
+        pip \
     && rm -rf /var/lib/apt/lists/*
-     
+
 RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-19 100 \
     && update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-19 100 \
     && update-alternatives --install /usr/bin/clangd clangd /usr/bin/clangd-19 100 \
     && update-alternatives --install /usr/bin/lldb lldb /usr/bin/lldb-19 100
+
+RUN pip install --upgrade pip \
+    && pip install \
+        numpy \
+        seaborn \
+        matplotlib \
+        pandas \
+    && rm -rf /root/.cache/pip
+
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 100
 
 WORKDIR /workspace
 

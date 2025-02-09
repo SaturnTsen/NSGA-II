@@ -7,7 +7,7 @@
 namespace benchmark {
     using individual::individual_t;
 
-    int lotzk(int k, individual::span x) {
+    int lotzk(const int k, const individual::span &x) {
         int n = x.size();
         if (k == 0) {
             int i = 0;
@@ -26,17 +26,17 @@ namespace benchmark {
         }
     }
 
-    objective::val_t lotz(individual_t &x) {
+    objective::val_t lotz(const individual_t &x) {
         return objective::val_t{(double)lotzk(0, x), (double)lotzk(1, x)};
     }
 
-    int mlotzk(int m, int k, individual::span x) {
+    int mlotzk(const int m, const int k, const individual::span &x) {
         assert(k >= 0 && k < m);
         int n2 = 2 * x.size() / m;
         return lotzk(k % 2, x.subspan((k / 2) * n2, n2));
     }
 
-    objective::val_t mlotz(int m, individual_t &x) {
+    objective::val_t mlotz(const int m, const individual_t &x) {
         int n = x.size();
         assert(m % 2 == 0);
         assert(n % (m / 2) == 0);
@@ -49,22 +49,19 @@ namespace benchmark {
     }
 
     // mLOTZ functor
-    mlotz_functor::mlotz_functor(size_t m) : m(m) {}
+    mlotz_functor::mlotz_functor(const size_t m) : m(m) { assert(m % 2 == 0); }
 
-    objective::val_t mlotz_functor::operator()(individual_t &x) {
-        return mlotz(m, x);
-    }
+    objective::val_t mlotz_functor::operator()(const individual_t &x) { return mlotz(m, x); }
 
-    bool is_lotz_pareto_front(individual_t &x) {
+    bool is_lotz_pareto_front(const individual_t &x) {
         return lotzk(0, x) + lotzk(1, x) == x.size();
     }
 
-    bool is_mlotz_pareto_front(int m, individual_t &x) {
+    bool is_mlotz_pareto_front(const int m, const individual_t &x) {
         // TODO prove this in the report
-        int n = x.size();
-        assert(m % 2 == 0);
+        const int n = x.size();
         assert(n % (m / 2) == 0);
-        int len_span = n / (m / 2);
+        const int len_span = n / (m / 2);
         for (int k = 0; k < m; k += 2) {
             if (mlotzk(m, k, x) + mlotzk(m, k + 1, x) != len_span) {
                 return false;

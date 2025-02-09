@@ -15,10 +15,9 @@ int main() {
 
     auto f = (nsga2::fn_t)mlotz_functor(objective_size);
 
-    auto criterion = end_criteria::hit_mlotz_pareto_front(objective_size);
+    auto criterion = end_criteria::cover_mlotz_pareto_front(objective_size);
 
-    auto experiment =
-        nsga2::NSGA2(individual_size, objective_size, population_size, f, 1);
+    auto experiment = nsga2::NSGA2(individual_size, objective_size, population_size, f, 1);
 
     population_t pop = experiment.run(criterion);
 
