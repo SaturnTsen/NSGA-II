@@ -9,12 +9,13 @@ void fire(size_t individual_size, size_t population_size, size_t max_iters, size
     using benchmark::mlotz_functor;
     using end_criteria::Task6Logger;
 
-    assert(f(dummy_individual).size() == objective_size);
-    assert(mutation_rate >= 0.0 && mutation_rate <= 1.0);
     assert(objective_size % 2 == 0);
     assert(individual_size % (objective_size / 2) == 0);
 
     auto f = mlotz_functor(objective_size);
+
+    individual::individual_t dummy_individual(individual_size, 0);
+    assert(f(dummy_individual).size() == objective_size);
 
     auto criterion = end_criteria::Task6Logger(individual_size, population_size, objective_size,
                                                max_iters, filename, 2);
