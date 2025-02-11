@@ -1,6 +1,7 @@
 #include "benchmark.h"
 #include "nsga2.h"
 #include <cstdint>
+#include <print>
 
 using benchmark::mlotz_functor;
 using nsga2::population_t;
@@ -20,6 +21,9 @@ int main() {
     auto experiment = nsga2::NSGA2(individual_size, objective_size, population_size, f, 1);
 
     population_t pop = experiment.run(criterion);
+
+    std::println("Population size: {0}", pop.size());
+    assert(pop.size() == population_size);
 
     return 0;
 }

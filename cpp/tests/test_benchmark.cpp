@@ -1,6 +1,7 @@
 #include "benchmark.h"
 #include "individual.h"
 #include <cassert>
+#include <iostream>
 
 using namespace individual;
 using namespace benchmark;

@@ -1,8 +1,9 @@
 #include "graph.h"
 #include <algorithm>
 #include <cassert>
-#include <iostream>
+#include <print>
 #include <vector>
+
 using namespace std;
 void test1() {
     Graph<int> g;
@@ -20,7 +21,7 @@ void test1() {
     vector<int> expected_in_degrees{1, 1, 1, 1};
 
     for (size_t i = 0; i < nodes.size(); i++) {
-        cout << g.getInDegree(nodes[i]) << endl;
+        println("{0}", g.getInDegree(nodes[i]));
         assert(g.getInDegree(nodes[i]) == expected_in_degrees[i]);
     }
 
@@ -30,7 +31,7 @@ void test1() {
     expected_in_degrees = {1, 2, 2, 1};
 
     for (size_t i = 0; i < nodes.size(); i++) {
-        cout << g.getInDegree(nodes[i]) << endl;
+        println("{0}", g.getInDegree(nodes[i]));
         assert(g.getInDegree(nodes[i]) == expected_in_degrees[i]);
     }
 }

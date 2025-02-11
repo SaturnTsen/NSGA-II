@@ -3,6 +3,7 @@
 #include "nsga2.h"
 #include "utils.h"
 #include <cstddef>
+#include <print>
 
 void fire(size_t individual_size, size_t population_size, size_t max_iters, size_t objective_size,
           uint32_t seed, std::string filename) {
@@ -42,7 +43,7 @@ int main(int argc, char **argv) {
     auto result = options.parse(argc, argv);
 
     if (result.arguments().empty() || result.count("help")) {
-        std::cout << options.help() << std::endl;
+        std::println("{0}", options.help());
         return 0;
     }
 
@@ -55,6 +56,6 @@ int main(int argc, char **argv) {
 
     fire(individual_size, population_size, max_iters, objective_size, seed, filename);
 
-    std::cout << "Done!" << std::endl;
+    std::println("Done!");
     return 0;
 }

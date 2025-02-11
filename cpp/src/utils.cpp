@@ -3,8 +3,11 @@
 #include "individual.h"
 #include <cstddef>
 #include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
+#include <print>
 #include <sstream>
+
 using json = nlohmann::json;
 
 std::string get_current_time() {
@@ -37,8 +40,7 @@ namespace end_criteria {
         using individual::operator<<;
         size_t cnt = count_pareto_front(p, m);
         if (iter % 20 == 0)
-            std::cout << std::format("Iteration: {}, individuals on Pareto front: {}", iter, cnt)
-                      << std::endl;
+            std::println("Iteration: {0}, individuals on Pareto front: {1}", iter, cnt);
         if (cnt == p.size()) {
             for (auto &i : p) {
                 std::cout << "individual: " << i << std::endl;
@@ -76,9 +78,9 @@ namespace end_criteria {
     void Task6Logger::log_new_data(size_t optimum_count, const size_t current_iter) {
         log_data["count_pareto_front"].push_back(optimum_count);
         if (current_iter % print_period == 0) {
-            std::cout << std::format("Iteration: {}, individuals on Pareto front: {}", current_iter,
-                                     optimum_count)
-                      << std::endl;
+            std::println("Iteration: {0}, individuals on Pareto front: {1}",
+                         current_iter,
+                         optimum_count);
             sync_to_file();
         }
     }
@@ -92,7 +94,7 @@ namespace end_criteria {
             log_data["final_population"].push_back(result);
         }
         log_data["metadata"]["end_time"] = get_current_time();
-        std::cout << "Saving log to " << filename << std::endl;
+        std::println("Saving log to {0}", filename);
     }
 
     bool Task6Logger::operator()(const population_t &population, const size_t current_iter) {
@@ -102,9 +104,9 @@ namespace end_criteria {
         log_new_data(cnt, current_iter);
         if (current_iter >= max_iters || cnt >= population.size()) {
             if (current_iter >= max_iters)
-                std::cout << "Maximum iterations reached..." << std::endl;
+                std::println("Maximum iterations reached...");
             else
-                std::cout << "All individuals are on the Pareto front!" << std::endl;
+                std::println("All individuals are on the Pareto front!");
 
             // save final results
             add_final_results(population);

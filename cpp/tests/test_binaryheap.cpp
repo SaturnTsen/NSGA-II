@@ -1,6 +1,6 @@
 #include "binaryheap.h"
 #include <cassert>
-#include <iostream>
+#include <print>
 
 using namespace binary_heap;
 
@@ -22,7 +22,7 @@ int main() {
     for (int i = 0; i < n; ++i) {
         double m = queue.extract_min();
         ordered.push_back(m);
-        std::cout << m << std::endl;
+        std::println("{0}", m);
     }
     std::vector<double> expected{-4., -1., 1., 2., 3.};
     assert(ordered == expected);

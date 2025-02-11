@@ -4,6 +4,7 @@
 #include "utils.h"
 #include <algorithm>
 #include <cstddef>
+#include <print>
 #include <random>
 #include <unordered_map>
 
@@ -20,12 +21,12 @@ namespace nsga2 {
           population_size(population_size), mutation_rate(mutation_rate), dist(mutation_rate),
           gen(seed), f(f) {
         individual_t dummy_individual(individual_size);
-        std::cout << "Initializing NSGA2 with the following parameters:" << std::endl;
-        std::cout << "Individual Size: " << individual_size << std::endl;
-        std::cout << "Objective Size: " << objective_size << std::endl;
-        std::cout << "Population Size: " << population_size << std::endl;
-        std::cout << "Mutation Rate: " << mutation_rate << std::endl;
-        std::cout << "Seed: " << seed << std::endl;
+        std::println("Initializing NSGA2 with the following parameters:");
+        std::println("Individual Size: {0}", individual_size);
+        std::println("Objective Size: {0}", objective_size);
+        std::println("Population Size: {0}", population_size);
+        std::println("Mutation Rate: {0}", mutation_rate);
+        std::println("Seed: {0}", seed);
     }
 
     NSGA2::NSGA2(const size_t individual_size, const size_t objective_size,
@@ -152,7 +153,7 @@ namespace nsga2 {
      */
     void NSGA2::init_population(const size_t individual_size,
                                 const size_t population_size) { // Tested
-        std::cout << "Initializing population" << std::endl;
+        std::println("Initializing population");
         std::bernoulli_distribution distribution(0.5);
         population.resize(population_size);
 
@@ -164,16 +165,16 @@ namespace nsga2 {
                 mutation_cnt += gene;
             }
         }
-        std::cout << "Mutation success rate(~0.5): "
-                  << (double)mutation_cnt / (individual_size * population_size) << std::endl;
+        std::println("Mutation success rate(~0.5): {0}",
+                     (double)mutation_cnt / (individual_size * population_size));
     }
 
     population_t NSGA2::run(criterion_t criterion) {
-        std::cout << "running NSGA2" << std::endl;
-        std::cout << "mutation rate: " << mutation_rate << std::endl;
-        std::cout << "individual size: " << individual_size << std::endl;
-        std::cout << "population size: " << population_size << std::endl;
-        std::cout << "objective size: " << objective_size << std::endl;
+        std::println("Running NSGA2 with the following parameters:");
+        std::println("Individual Size: {0}", individual_size);
+        std::println("Objective Size: {0}", objective_size);
+        std::println("Population Size: {0}", population_size);
+        std::println("Mutation Rate: {0}", mutation_rate);
 
         init_population(individual_size, population_size);
         size_t iter = 0;
