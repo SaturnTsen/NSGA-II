@@ -115,5 +115,5 @@ namespace individual {
 
     /* Returns `true` if the left individual Pareto-dominates
        the right individual with respect to an objective function. */
-    bool dominates(const individual_t &a, const individual_t &b, const objective::fn_t f);
+    bool dominates(const individual_t &a, const individual_t &b, const objective::fn_t &f);
 } // namespace individual

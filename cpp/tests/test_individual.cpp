@@ -6,7 +6,7 @@
 using individual::individual_t;
 using objective::val_t;
 
-val_t f(individual_t &x) {
+val_t f(const individual_t &x) {
     val_t v;
     for (bool b : x) {
         v.push_back((double)b);
@@ -43,16 +43,16 @@ int main() {
 
     assert(pareto::compare(vx, vz) == pareto::order::unordered);
 
-    assert(individual::compare(x, x, *f) == 0);
-    assert(individual::compare(y, x, *f) > 0);
-    assert(individual::compare(x, y, *f) < 0);
+    assert(individual::compare(x, x, f) == 0);
+    assert(individual::compare(y, x, f) > 0);
+    assert(individual::compare(x, y, f) < 0);
 
-    assert(individual::dominates(x, x, *f));
-    assert(!individual::strictly_dominates(x, x, *f));
-    assert(individual::strictly_dominates(y, x, *f));
-    assert(!individual::dominates(x, y, *f));
+    assert(individual::dominates(x, x, f));
+    assert(!individual::strictly_dominates(x, x, f));
+    assert(individual::strictly_dominates(y, x, f));
+    assert(!individual::dominates(x, y, f));
 
-    assert(individual::compare(x, z, *f) == pareto::order::unordered);
+    assert(individual::compare(x, z, f) == pareto::order::unordered);
 
     using individual::operator<<;
 
