@@ -1,10 +1,12 @@
 # %%
 
+import argparse
 import numpy as np
 import json
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
+from datetime import datetime
 # %%
 
 
@@ -46,17 +48,48 @@ def plot_pareto_front_proportion(data_path):
     print(f"Plotting the Pareto front proportion for {data_path}")
     sns.set_theme(style="whitegrid")
     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+
+    xs = []
+    ys = []
+    running_time = []
+    total_steps = []
+    success = []
     for file in data_path.glob('*.json'):
         with open(file, 'r') as f:
             data = json.load(f)
             print(data["metadata"])
+
+            fmt = "%Y-%m-%d %H:%M:%S"
+            start_time = datetime.strptime(data['metadata']['start_time'], fmt)
+            end_time = datetime.strptime(data['metadata']['end_time'], fmt)
+            running_time.append((end_time - start_time).total_seconds())
+
+            pareto_coverage = np.array(data['count_pareto_front'])
+            population_size = data['metadata']['population_size']
+            num_steps = len(pareto_coverage)
+
             # Plot the results
-            sns.lineplot(x=range(len(data['count_pareto_front'])),
-                         y=np.array(data['count_pareto_front']) / data["metadata"]["population_size"],
-                         label=file.stem, ax=ax)
+            x = np.arange(num_steps)
+            y = pareto_coverage / population_size
+            sns.lineplot(x=x, y=y, label=file.stem, ax=ax)
+            xs.append(x)
+            ys.append(y)
+
+            total_steps.append(num_steps)
+            success.append(pareto_coverage[-1] == population_size)
 
     ax.set_xlabel('Iterations')
     ax.set_ylabel('Proportion of Population')
     plt.title('Proportion of the Population Hitting Pareto Front')
     plt.legend()
     plt.savefig(data_path / 'pareto_front_proportion.png')
+
+    # TODO: plot total_steps vs. running_time with full_coverage marker
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Analyze NSGA-II results')
+    parser.add_argument('dir', help='Directory containing JSON log files')
+    args = parser.parse_args()
+
+    plot_pareto_front_proportion(args.dir)

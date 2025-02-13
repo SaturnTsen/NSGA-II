@@ -90,11 +90,11 @@ For a more detailed overview, see [Project Structure](#project-structure) below.
 
 ## **Running Experiments**
 
-After building, you will have the executable. Run it with arguments for problem
-size, number of objectives, etc. For example:
+After building, you will have the executable. You can run the algorithm once,
+with arguments for problem size, number of objectives, etc. For example:
 
 ```bash
-./build/nsgaii -n 10 -N 100 -m 2 --max_iters 1000 --seed 42 --filename ./data/nsgaii_test.json
+./build/nsgaii -n 10 -N 100 -m 2 --max_iters 1000 --seed 42 --filename ./data/run_n10_N100_m2_mi1000_s42/nsgaii_test.json
 ```
 
 This program will:
@@ -103,6 +103,7 @@ This program will:
 2. Run NSGA-II (or modified NSGA-II) for the specified number of iterations.
 3. Save experimental results (e.g., Pareto coverage, iteration count, etc.) as
    JSON files in the `data/` directory.
+4. Log running information in the `data/` directory.
 
 Run `./build/nsgaii --help` for a more detailed overview of the arguments.
 
@@ -110,6 +111,8 @@ Run `./build/nsgaii --help` for a more detailed overview of the arguments.
 data.
 
 ## **Analyzing and Visualizing Results (Python)**
+
+### Prerequisites
 
 1. **Install Python 3**.
 
@@ -119,30 +122,38 @@ data.
    pip install -r requirements.txt
    ```
 
-3. **Data Analysis**:
-   ```bash
-   python analyze_results.py
-   ```
-   This script will:
-   - Read all of the JSON experiment results in the `./data` directory.
-   - Plot the Pareto front coverage over time for each experiment.
+### **Data Analysis**
 
-   TODO: allow input files
-   TODO: plot aggregated data over all of the experiments
-   (running time, success rate)
-   This script might:
-   - Compute average coverage per iteration.
-   - Calculate success rates (did the algorithm cover the entire front?).
+```bash
+cd python
+python analyze_results.py ../data/run_n10_N100_m2_mi1000_s42/
+```
 
-4. **Result Visualization**:
-   ```bash
-   python plot_results.py --input ../data/results_n10.csv --output ../plots/coverage_plot.png
-   ```
-   This script generates:
-   - Coverage vs. iteration plots.
-   - Comparisons between standard and modified NSGA-II.
+This script will:
+- Read all of the JSON experiment results in the specified directory.
+- Plot the Pareto front coverage over time for each experiment.
+
+TODO: plot aggregated data over all of the experiments
+(running time, success rate)
+
+This script might:
+- Compute average coverage per iteration.
+- Calculate success rates (did the algorithm cover the entire front?).
+
+TODO: Comparisons between standard and modified NSGA-II
 
 All figures will be saved in the **`plots/`** folder.
+
+## All-in-one batched runs and analyses
+
+The easiest way to run and analyze experiments in batch uses the Python script as below:
+```bash
+python batch.py > ../data/batch.log
+```
+This script will:
+- Run all of the experiments.
+- Read all of the JSON experiment results in the `./data` directory.
+- Plot the Pareto front coverage over time for each experiment.
 
 ## **Detailed Project Structure**
 

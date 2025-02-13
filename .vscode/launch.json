@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "main",
             "program": "${workspaceFolder}/build/nsgaii",
-            "args": [],
+            "args": ["-n", "10", "-N", "100", "-m", "2", "--max_iters", "1000", "--seed", "42", "--filename", "./data/nsgaii_test.json"],
             "cwd": "${workspaceFolder}"
         },
         {
