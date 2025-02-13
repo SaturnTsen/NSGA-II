@@ -53,17 +53,17 @@ namespace nsga2 {
         size_t size = population.size();
         // O(N) N = population size
         for (index_t i = 0; i < size; i++)
-            graph.addNode(i);
+            graph.add_node(i);
         // O(N^2) Is there a clever way to do this? e.g. dynamic pruning?
         // The graph could be dense here
         for (index_t i = 0; i < size; i++)
             for (index_t j = 0; j < size; j++) {
                 if (individual::strictly_dominates(population[i], population[j], f)) {
-                    graph.addEdge(i, j);
+                    graph.add_edge(i, j);
                 }
             }
         // O(N^2)
-        return graph.popAndGetFronts();
+        return graph.pop_and_get_fronts();
     }
 
     /**

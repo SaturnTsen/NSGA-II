@@ -45,12 +45,16 @@ namespace nsga2 {
 
         /**
          * @brief Run the NSGA-II algorithm.
+         * 
+         * @details Equivalent pseudo-code:
+         * ```
          * init_population()
          * while (termination criteria not met) {
          *   population = mutate(population)
-         *   ranks = non_dominate_sort(population)
+         *   ranks = non_dominated_sort(population)
          *   select(population, ranks)
          * }
+         * ```
          */
         population_t run(criterion_t criterion);
 

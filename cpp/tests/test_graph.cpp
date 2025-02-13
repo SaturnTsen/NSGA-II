@@ -10,44 +10,44 @@ void test1() {
     vector<int> nodes{0, 1, 2, 3};
 
     for (auto node : nodes) {
-        g.addNode(node);
+        g.add_node(node);
     }
     assert(g.size() == 4);
-    g.addEdge(0, 1);
-    g.addEdge(1, 2);
-    g.addEdge(2, 0);
-    g.addEdge(2, 3);
+    g.add_edge(0, 1);
+    g.add_edge(1, 2);
+    g.add_edge(2, 0);
+    g.add_edge(2, 3);
 
     vector<int> expected_in_degrees{1, 1, 1, 1};
 
     for (size_t i = 0; i < nodes.size(); i++) {
-        println("{0}", g.getInDegree(nodes[i]));
-        assert(g.getInDegree(nodes[i]) == expected_in_degrees[i]);
+        println("{0}", g.get_in_degree(nodes[i]));
+        assert(g.get_in_degree(nodes[i]) == expected_in_degrees[i]);
     }
 
-    g.addEdge(3, 2);
-    g.addEdge(3, 1);
+    g.add_edge(3, 2);
+    g.add_edge(3, 1);
 
     expected_in_degrees = {1, 2, 2, 1};
 
     for (size_t i = 0; i < nodes.size(); i++) {
-        println("{0}", g.getInDegree(nodes[i]));
-        assert(g.getInDegree(nodes[i]) == expected_in_degrees[i]);
+        println("{0}", g.get_in_degree(nodes[i]));
+        assert(g.get_in_degree(nodes[i]) == expected_in_degrees[i]);
     }
 }
 void test2() {
     Graph<int> g;
     for (int i = 0; i < 5; i++) {
-        g.addNode(i);
+        g.add_node(i);
     }
-    g.addEdge(0, 1);
-    g.addEdge(2, 4);
-    g.addEdge(0, 4);
-    g.addEdge(4, 3);
-    g.addEdge(0, 2);
-    g.addEdge(1, 3);
+    g.add_edge(0, 1);
+    g.add_edge(2, 4);
+    g.add_edge(0, 4);
+    g.add_edge(4, 3);
+    g.add_edge(0, 2);
+    g.add_edge(1, 3);
 
-    auto fronts = g.popAndGetFronts();
+    auto fronts = g.pop_and_get_fronts();
 
     if (fronts.size() != 4)
         throw runtime_error("fronts size is not 4");
@@ -71,18 +71,18 @@ void test3() {
     // multi leading nodes
     Graph<int> g;
     for (int i = 0; i < 7; i++) {
-        g.addNode(i);
+        g.add_node(i);
     }
 
-    g.addEdge(0, 1);
-    g.addEdge(2, 4);
-    g.addEdge(0, 4);
-    g.addEdge(4, 3);
-    g.addEdge(0, 2);
-    g.addEdge(1, 3);
-    g.addEdge(5, 6);
+    g.add_edge(0, 1);
+    g.add_edge(2, 4);
+    g.add_edge(0, 4);
+    g.add_edge(4, 3);
+    g.add_edge(0, 2);
+    g.add_edge(1, 3);
+    g.add_edge(5, 6);
 
-    auto fronts = g.popAndGetFronts();
+    auto fronts = g.pop_and_get_fronts();
 
     if (fronts.size() != 4)
         throw runtime_error("fronts size is not 4");
