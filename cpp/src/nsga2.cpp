@@ -4,6 +4,7 @@
 #include "utils.h"
 #include <algorithm>
 #include <cstddef>
+#include <cmath>
 #include <print>
 #include <random>
 #include <unordered_map>
@@ -30,7 +31,7 @@ namespace nsga2 {
     }
 
     NSGA2::NSGA2(const size_t individual_size, const size_t objective_size,
-                 const size_t population_size, const objective::fn_t &f, const uint32_t seed)
+                 const size_t population_size, const objective::fn_t f, const uint32_t seed)
         : NSGA2(individual_size, objective_size, population_size, f, 1.0 / (double)individual_size,
                 seed) {}
 
@@ -46,7 +47,7 @@ namespace nsga2 {
         }
     }
 
-    fronts_t NSGA2::non_dominate_sort(const population_t &population) {
+    fronts_t NSGA2::non_dominated_sort(const population_t &population) {
         // TODO Performance improvements
         Graph<index_t> graph;
         size_t size = population.size();
@@ -56,9 +57,11 @@ namespace nsga2 {
         // O(N^2) Is there a clever way to do this? e.g. dynamic pruning?
         // The graph could be dense here
         for (index_t i = 0; i < size; i++)
-            for (index_t j = 0; j < size; j++)
-                if (individual::strictly_dominates(population[i], population[j], f))
+            for (index_t j = 0; j < size; j++) {
+                if (individual::strictly_dominates(population[i], population[j], f)) {
                     graph.addEdge(i, j);
+                }
+            }
         // O(N^2)
         return graph.popAndGetFronts();
     }
@@ -87,13 +90,15 @@ namespace nsga2 {
             std::sort(indices.begin(), indices.end(),
                       [&](index_t a, index_t b) { return values[a][m] < values[b][m]; });
             // set the boundary points to infinity
-            distances[indices[0]] = std::numeric_limits<double>::infinity();
-            distances[indices[size - 1]] = std::numeric_limits<double>::infinity();
+            double inf = std::numeric_limits<double>::infinity();
+            distances[indices[0]] = inf;
+            distances[indices[size - 1]] = inf;
             // Added eps to avoid division by zero
+            // FIXME: should it be infinity by design?
             double d = values[indices[size - 1]][m] - values[indices[0]][m] + eps;
             // O(N), recall that `distances` is a hash map
             for (size_t j = 1; j < size - 1; j++) {
-                if (distances[indices[j]] == std::numeric_limits<double>::infinity())
+                if (std::isinf(distances[indices[j]]))
                     continue;
                 distances[indices[j]] +=
                     (values[indices[j + 1]][m] - values[indices[j - 1]][m]) / d;
@@ -181,7 +186,7 @@ namespace nsga2 {
         fronts_t fronts;
         while (!criterion(population, iter)) {
             mutate(population);
-            fronts = std::move(non_dominate_sort(population));
+            fronts = std::move(non_dominated_sort(population));
             population = std::move(crowding_distance_select(population, fronts));
             iter++;
         }

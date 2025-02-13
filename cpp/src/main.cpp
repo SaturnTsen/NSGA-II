@@ -22,7 +22,6 @@ void fire(size_t individual_size, size_t population_size, size_t max_iters, size
                                                max_iters, filename, 2);
 
     auto experiment = nsga2::NSGA2(individual_size, objective_size, population_size, f, seed);
-
     nsga2::population_t pop = experiment.run(criterion);
 }
 

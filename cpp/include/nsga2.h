@@ -40,7 +40,7 @@ namespace nsga2 {
          * @brief NSGA2 constructor with mutation rate set to 1/population_size.
          */
         NSGA2(const size_t individual_size, const size_t objective_size,
-              const size_t population_size, const fn_t &f,
+              const size_t population_size, const fn_t f,
               const uint32_t seed = std::random_device()());
 
         /**
@@ -62,7 +62,7 @@ namespace nsga2 {
         const size_t population_size;
         const size_t objective_size;
         const double mutation_rate;
-        const fn_t &f;
+        const fn_t f;
 
         population_t population;
 
@@ -70,7 +70,7 @@ namespace nsga2 {
 
         void mutate(population_t &population);
 
-        fronts_t non_dominate_sort(const population_t &population);
+        fronts_t non_dominated_sort(const population_t &population);
 
         scores_t crowding_distance(const population_t &population, front_t &indices);
 

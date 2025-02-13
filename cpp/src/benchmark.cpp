@@ -38,7 +38,7 @@ namespace benchmark {
 
     objective::val_t mlotz(const int m, const individual_t &x) {
         int n = x.size();
-        assert(m % 2 == 0);
+        assert(m > 1 && m % 2 == 0);
         assert(n % (m / 2) == 0);
 
         objective::val_t v(m);
@@ -49,9 +49,11 @@ namespace benchmark {
     }
 
     // mLOTZ functor
-    mlotz_functor::mlotz_functor(const size_t m) : m(m) { assert(m % 2 == 0); }
+    mlotz_functor::mlotz_functor(const size_t m) : m(m) { assert(m > 1 && m % 2 == 0); }
 
-    objective::val_t mlotz_functor::operator()(const individual_t &x) { return mlotz(m, x); }
+    objective::val_t mlotz_functor::operator()(const individual_t &x) {
+        return mlotz(m, x);
+    }
 
     bool is_lotz_pareto_front(const individual_t &x) {
         return lotzk(0, x) + lotzk(1, x) == x.size();
@@ -60,7 +62,7 @@ namespace benchmark {
     bool is_mlotz_pareto_front(const int m, const individual_t &x) {
         // TODO prove this in the report
         const int n = x.size();
-        assert(n % (m / 2) == 0);
+        assert(m > 1 && n % (m / 2) == 0);
         const int len_span = n / (m / 2);
         for (int k = 0; k < m; k += 2) {
             if (mlotzk(m, k, x) + mlotzk(m, k + 1, x) != len_span) {
