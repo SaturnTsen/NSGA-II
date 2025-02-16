@@ -13,14 +13,14 @@ int main() {
     int n = values.size();
 
     for (int i = 0; i < n; ++i) {
-        queue.emplace(values[i], i);
+        queue.emplace(Node{.key = values[i], .id = i});
     }
     // 7.0 -> -1.0
     queue.decrease_key(3, -1.0);
 
     std::vector<double> ordered;
     for (int i = 0; i < n; ++i) {
-        double m = queue.extract_min();
+        double m = queue.extract_min().key;
         ordered.push_back(m);
         std::println("{0}", m);
     }

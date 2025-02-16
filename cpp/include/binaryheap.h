@@ -63,9 +63,10 @@ namespace binary_heap {
         }
     };
 
-
+    /* An element of a `BinaryHeap` compared by `key` and indexed by `id`. */
     template <typename K, typename I>
     struct Node {
+        public:
         K key;
         I id;
     };
@@ -92,13 +93,17 @@ namespace binary_heap {
             return nodes.size();
         }
 
+        Node<K, I> &operator[](int i) {
+            return nodes[i];
+        }
+
         /** Add an element in the binary heap. */
-        void emplace(K key, I id) {
-            assert(indices.find(id) == indices.end());
+        void emplace(Node<K, I> node) {
+            assert(indices.find(node.id) == indices.end());
 
             int index = size();
-            nodes.push_back(Node{key, id});
-            indices.emplace(id, index);
+            nodes.push_back(node);
+            indices.emplace(node.id, index);
 
             while (index > 0 && nodes[(index - 1) / 2].key > nodes[index].key) {
                 // Swap the node with its parent while the parent has a greater key
@@ -107,14 +112,14 @@ namespace binary_heap {
         }
 
         /** Extract and return the minimum value of this binary heap. */
-        K extract_min() {
+        Node<K, I> extract_min() {
             int n = size();
             assert(n > 0);
 
-            K min = nodes[0].key;
+            Node min = nodes[0];
 
             // Remove the root node
-            indices.erase(nodes[0].id);
+            indices.erase(min.id);
 
             // Replace the root with the last element
             nodes[0] = nodes[n - 1];

@@ -70,14 +70,34 @@ namespace nsga2 {
 
         population_t population;
 
+        /**
+         * @brief init the population uniformly.
+         *
+         * @param individual_size
+         * @param population_size
+         */
         void init_population(const size_t individual_size, const size_t population_size);
 
         void mutate(population_t &population);
 
         fronts_t non_dominated_sort(const population_t &population);
 
+        /**
+         * @brief Calculate the crowding distance for each individual in the front.
+         *
+         * @param population The total population.
+         * @param front the list of indices of the individuals in the front.
+         * @return scores_t
+         */
         scores_t crowding_distance(const population_t &population, front_t &indices);
 
+        /**
+         * @brief returns the next generation of individuals based on the fronts.
+         *
+         * @param population
+         * @param fronts
+         * @return population_t
+         */
         population_t crowding_distance_select(population_t &population, fronts_t &fronts);
 
         // Random number generator

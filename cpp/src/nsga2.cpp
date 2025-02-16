@@ -66,13 +66,6 @@ namespace nsga2 {
         return graph.pop_and_get_fronts();
     }
 
-    /**
-     * @brief Calculate the crowding distance for each individual in the front.
-     *
-     * @param population The total population.
-     * @param front the list of indices of the individuals in the front.
-     * @return scores_t
-     */
     scores_t NSGA2::crowding_distance(const population_t &population, front_t &indices) {
         // TODO Test & Performance improvements
         size_t size = indices.size();
@@ -94,7 +87,7 @@ namespace nsga2 {
             distances[indices[0]] = inf;
             distances[indices[size - 1]] = inf;
             // Added eps to avoid division by zero
-            // FIXME: should it be infinity by design?
+            // This avoids problems with 0 / 0
             double d = values[indices[size - 1]][m] - values[indices[0]][m] + eps;
             // O(N), recall that `distances` is a hash map
             for (size_t j = 1; j < size - 1; j++) {
@@ -107,13 +100,6 @@ namespace nsga2 {
         return distances;
     }
 
-    /**
-     * @brief returns the next generation of individuals based on the fronts.
-     *
-     * @param population
-     * @param fronts
-     * @return population_t
-     */
     population_t NSGA2::crowding_distance_select(population_t &population, fronts_t &fronts) {
         // TODO Test & Performance improvements
         population_t new_population;
@@ -140,6 +126,7 @@ namespace nsga2 {
         std::partial_sort(front.begin(), front.begin() + remaining, front.end(),
                           [&](index_t a, index_t b) { return scores[a] > scores[b]; });
         // O(N) in the worst case: select the individuals with the highest crowding distance
+        // TODO: break ties uniformly at random
         for (size_t i = 0; i < remaining; i++) {
             new_population.push_back(std::move(population[front[i]]));
         }
@@ -150,12 +137,6 @@ namespace nsga2 {
         return new_population;
     }
 
-    /**
-     * @brief init the population uniformly.
-     *
-     * @param individual_size
-     * @param population_size
-     */
     void NSGA2::init_population(const size_t individual_size,
                                 const size_t population_size) { // Tested
         std::println("Initializing population");
