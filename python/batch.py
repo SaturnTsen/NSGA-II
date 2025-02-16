@@ -49,7 +49,7 @@ def run_command(args, log_file):
 
 # NSGA-II parameters
 individual_size = [4, 8, 12, 24]  # n
-objective_size = [2, 4, 8, 12]    # m
+objective_size = [2, 4, 8, 8]    # m
 population_size = [
     int(4 * ((2 * n / m + 1) ** (m / 2)))
     for n, m in zip(individual_size, objective_size)
