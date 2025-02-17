@@ -105,10 +105,7 @@ namespace binary_heap {
             nodes.push_back(node);
             indices.emplace(node.id, index);
 
-            while (index > 0 && nodes[(index - 1) / 2].key > nodes[index].key) {
-                // Swap the node with its parent while the parent has a greater key
-                swap_nodes((index - 1) / 2, index);
-            }
+            sift_up(index);
         }
 
         /** Extract and return the minimum value of this binary heap. */
@@ -123,6 +120,7 @@ namespace binary_heap {
 
             // Replace the root with the last element
             nodes[0] = nodes[n - 1];
+            indices[nodes[0].id] = 0;
             nodes.pop_back();
 
             sift_down(0);
@@ -158,13 +156,14 @@ namespace binary_heap {
             while (i < n - 1) {
                 int c1 = 2*i + 1;
                 int c2 = c1 + 1;
-                // Swap the node with one of its children with a lower key
+                if (c2 < n && nodes[c1].key > nodes[c2].key) {
+                    std::swap(c1, c2);
+                    assert(nodes[c1].key <= nodes[c2].key);
+                }
+                // Swap the node with its children with the lowest key
                 if (c1 < n && nodes[c1].key < nodes[i].key) {
                     swap_nodes(c1, i);
                     i = c1;
-                } else if (c2 < n && nodes[c2].key < nodes[i].key) {
-                    swap_nodes(c2, i);
-                    i = c2;
                 } else {
                     break;
                 }
@@ -181,6 +180,23 @@ namespace binary_heap {
                 swap_nodes(parent, index);
                 index = parent;
             }
+        }
+
+        public:
+        /* A quick sanity check that ensures the heap is well-formed. */
+        bool has_heap_property() {
+            int n = size();
+            for (int i = 0; i < n; ++i) {
+                int c1 = 2 * i + 1;
+                int c2 = 2 * i + 2;
+                if (c1 < n && nodes[c1].key < nodes[i].key) {
+                    return false;
+                }
+                if (c2 < n && nodes[c2].key < nodes[i].key) {
+                    return false;
+                }
+            }
+            return true;
         }
     };
 } // namespace binary_heap

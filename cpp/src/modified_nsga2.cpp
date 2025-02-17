@@ -99,19 +99,21 @@ namespace nsga2 {
 
             // Recompute the crowding distance of its neighbors.
             // If `pos` is a border node, its crowding distance is already infinity.
-            // Moreover, `pos` cannot have become a border node, since border nodes
+            // Moreover, `pos` cannot have become a "border" node, since border nodes
             // are removed last as the priority queue pops the min element first.
+            // FIXME: Once only nodes with infinite crowding distance remain,
+            // there might be problems with inf - inf
             if (pos.has_prev() && pos.has_next()) {
                 // Note that the positions have been updated, so `pos_prev` and `pos_next`
                 // are actually adjacent.
                 SortedPosition pos_prev = positions[pos.prev];
-                if (pos_prev.has_prev()) {
+                if (pos_prev.has_prev() && std::isfinite(scores[pos.prev])) {
                     double dist = (scores[pos_prev.next] - scores[pos_prev.prev]) / d;
                     pqueue.decrease_key(pos.prev, dist);
                 }
                 SortedPosition pos_next = positions[pos.next];
                 assert(pos_prev.next == pos_next.self && pos_next.prev == pos_prev.self);
-                if (pos_next.has_next()) {
+                if (pos_next.has_next() && std::isfinite(scores[pos.next])) {
                     double dist = (scores[pos_next.next] - scores[pos_next.prev]) / d;
                     pqueue.decrease_key(pos.next, dist);
                 }
