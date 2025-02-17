@@ -129,6 +129,11 @@ namespace binary_heap {
             return min;
         }
 
+        /** Get the key associated to an id. */
+        K get_key(I id) {
+            return nodes[indices[id]].key;
+        }
+
         /** Decrease the key of the element specified by `id`. */
         void decrease_key(I id, K new_key) {
             assert(indices.find(id) != indices.end());

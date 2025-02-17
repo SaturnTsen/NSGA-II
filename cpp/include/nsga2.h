@@ -56,12 +56,12 @@ namespace nsga2 {
          * }
          * ```
          */
-        population_t run(criterion_t criterion);
+        virtual population_t run(criterion_t criterion);
 
         // Note: A destructor is not necessary since all objects are stack
         // allocated.
 
-      private:
+      protected:
         const size_t individual_size;
         const size_t population_size;
         const size_t objective_size;
@@ -98,7 +98,7 @@ namespace nsga2 {
          * @param fronts
          * @return population_t
          */
-        population_t crowding_distance_select(population_t &population, fronts_t &fronts);
+        virtual population_t crowding_distance_select(population_t &population, fronts_t &fronts);
 
         // Random number generator
         std::mt19937 gen;
